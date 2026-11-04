@@ -80,6 +80,7 @@ while ejecutando:
     RELOJ.tick(60)
     # EVENTOS: cerrar ventana o pulsar ESC / R
     for evento in pygame.event.get():
+
         if evento.type == pygame.QUIT:
             ejecutando = False
         elif evento.type == pygame.KEYDOWN:
@@ -116,4 +117,111 @@ while ejecutando:
     PANTALLA.blit(ayuda, (ANCHO // 2 - ayuda.get_width() // 2, ALTO - 30))
     # flip() presenta el buffer completo ya dibujado
     pygame.display.flip()
+pygame.quit()
+
+            # Detecta las teclas presionadas
+        if evento.type == pygame.KEYDOWN:
+
+            # Salir del juego
+            if evento.key == pygame.K_ESCAPE:
+                ejecutando = False
+
+            # Volver a jugar con la tecla R
+            elif evento.key == pygame.K_r and terminado:
+                numero = random.randint(1, 20)
+                respuesta = ""
+                intentos = 0
+                terminado = False
+                mensaje = "Adivina un numero del 1 al 20"
+
+            # Rendirse con la tecla S
+            elif evento.key == pygame.K_s and not terminado:
+                mensaje = f"Te rendiste. El numero era {numero}"
+                terminado = True
+                respuesta = ""
+
+            elif not terminado:
+                
+            # Se encarga de leer y comprobar el numero
+                if evento.key == pygame.K_RETURN:
+
+                    if respuesta.isdigit():
+
+                        intento = int(respuesta)
+                        
+            # Validar el rango de los numeros randoms con la condicional  If 
+                        if intento < 1 or intento > 20:
+                            mensaje = "Escribe un numero del 1 al 20"
+
+                        else:
+                            intentos += 1
+
+            # Mensaje del resultado obtenido del numero comprobando las respuesta del usuario
+
+                            if intento > numero:
+                                mensaje = "El numero es menor"
+
+                            elif intento < numero:
+                                mensaje = "El numero es mayor"
+
+                            else:
+                                mensaje = "Felicidades! Acertaste"
+                                terminado = True
+
+                            # Comprobar si se agotaron los intentos
+                            if intentos >= max_intentos and not terminado:
+                                mensaje = f"Perdiste! Era el {numero}"
+                                terminado = True
+
+                        respuesta = ""
+
+                elif evento.key == pygame.K_BACKSPACE:
+                    respuesta = respuesta[:-1]
+
+                elif evento.unicode.isdigit() and len(respuesta) < 2:
+                    respuesta += evento.unicode
+
+    # Dibujar la  ventana y los mmensajes principales 
+    ventana.fill((255, 255, 255))
+
+    texto = fuente.render(mensaje, True, (0, 0, 0))
+    ventana.blit(texto, (30, 90))
+
+    texto = fuente.render(
+        "Tu numero: " + respuesta, True, (0, 0, 255)
+    )
+    ventana.blit(texto, (30, 150))
+    
+    # Contador de intentos
+    texto = fuente_pequena.render(
+        f"Intentos: {intentos} de {max_intentos}",
+        True, (200, 0, 0)
+    )
+    ventana.blit(texto, (30, 205))
+
+    # Las indicacinoes segun el estado del jugador si se quiere rendir
+    if not terminado:
+        texto = fuente_pequena.render(
+            "ENTER: Adivinar | S: Rendirse",
+            True, (0, 100, 0)
+        )
+        ventana.blit(texto, (30, 260))
+        
+    # Muestra la instruccion de salir oh jugar otra vez
+    else:
+        texto = fuente_pequena.render(
+            "R: Jugar otra vez | ESC: Salir",
+            True, (0, 0, 150)
+        )
+        ventana.blit(texto, (30, 260))
+
+    # Salir del juego comple
+    texto = fuente_pequena.render(
+        "ESC: Salir del juego",
+        True, (100, 100, 100)
+    )
+    ventana.blit(texto, (30, 320))
+
+    pygame.display.flip()
+
 pygame.quit()
